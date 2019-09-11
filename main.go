@@ -1,20 +1,29 @@
 package main
 
 import (
-	fmt
-	net
+	"fmt"
+	"net"
+	"os"
 )
-func checkErr(err) {
+
+func checkErr(err error) {
 	if err != nil {
- 		fmt.Println(err)
- 		os.Exit(1)
+		fmt.Println(err)
+		os.Exit(1)
+	}
 }
 
-func cidrContains (cidr, ip string) {
-	ipAddress, ipNet, err := net.ParseCIDR(cidr)
+func cidrContains(cidr, ip string) bool {
+	_, ipNet, err := net.ParseCIDR(cidr)
 	checkErr(err)
-	return ipNet.Contains(net.ParseCIDR(ip))
+	checkIP, _, err := net.ParseCIDR(ip)
+	checkErr(err)
+	return ipNet.Contains(checkIP)
 }
 
-fmt.Println(cidrContains("10.0.0.0/8","10.10.10.255")
-fmt.Println(cidrContains("10.0.0.0/8","172.16.32.54")
+func main() {
+
+	fmt.Println(cidrContains("10.0.0.0/8", "10.10.10.25/32"))
+	fmt.Println(cidrContains("10.0.0.0/8", "172.16.32.54/32"))
+
+}
